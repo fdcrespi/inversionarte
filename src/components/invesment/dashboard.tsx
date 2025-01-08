@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -38,107 +38,70 @@ import {
   SelectContent,
 } from "../ui/select";
 import { Types, Wallet } from "@/lib/types";
+import { supabase } from "@/lib/data";
 
 type Investment = {
   id: string;
   asset: string;
-  type: string;
+  type: number;
   amount: string;
   value: string;
   money: string;
+  wallet: number;
   purchaseDate: string;
   currentPrice: string;
   profitLoss: string;
 };
 
-const initialInvestments: Investment[] = [
-  {
-    id: "INV001",
-    asset: "Bitcoin",
-    type: "Criptomoneda",
-    amount: "0.5 BTC",
-    value: "$15,000",
-    money: "ARS",
-    purchaseDate: "2023-01-15",
-    currentPrice: "$30,000",
-    profitLoss: "+15%",
-  },
-  {
-    id: "INV002",
-    asset: "Apple Inc.",
-    type: "Acciones",
-    amount: "10 acciones",
-    value: "$1,450",
-    money: "USD",
-    purchaseDate: "2023-02-20",
-    currentPrice: "$145",
-    profitLoss: "+5.8%",
-  },
-  {
-    id: "INV003",
-    asset: "ETH",
-    type: "Criptomoneda",
-    amount: "5 ETH",
-    value: "$9,000",
-    money: "USD",
-    purchaseDate: "2023-03-10",
-    currentPrice: "$1,800",
-    profitLoss: "-2.2%",
-  },
-  {
-    id: "INV004",
-    asset: "S&P 500 ETF",
-    type: "ETF",
-    amount: "20 unidades",
-    value: "$8,000",
-    money: "USD",
-    purchaseDate: "2023-04-05",
-    currentPrice: "$400",
-    profitLoss: "+3.5%",
-  },
-  {
-    id: "INV005",
-    asset: "Bono del Tesoro",
-    type: "Bono",
-    amount: "$10,000",
-    value: "$10,200",
-    money: "USD",
-    purchaseDate: "2023-05-01",
-    currentPrice: "102%",
-    profitLoss: "+2%",
-  },
-];
-
-export default function InvestmentsDashboard({types, wallets} : {types: Types[], wallets: Wallet[]}) {
-  const [investments, setInvestments] =
-    useState<Investment[]>(initialInvestments);
+export default function InvestmentsDashboard({
+  types,
+  wallets,
+}: {
+  types: Types[];
+  wallets: Wallet[];
+}) {
+  const [investments] = useState<Investment[]>([]);
   const [newInvestment, setNewInvestment] = useState<Partial<Investment>>({});
   const [isDialogOpen, setIsDialogOpen] = useState(false);
 
+  const [user, setUser] = useState<string>('');
+
+  useEffect(() => {
+    const getUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+      if (user) {
+        setUser(user.id);
+      }
+    };
+    getUser();
+  }, []);
+
   const handleAddInvestment = () => {
-    if (
+    console.log(newInvestment);
+    console.log(user);
+    /* if (
       newInvestment.asset &&
       newInvestment.type &&
       newInvestment.amount &&
       newInvestment.value &&
-      newInvestment.money
+      newInvestment.money &&
+      newInvestment.wallet
     ) {
       const investment: Investment = {
-        id: `INV${investments.length + 1}`.padStart(6, "0"),
         asset: newInvestment.asset,
         type: newInvestment.type,
         amount: newInvestment.amount,
         value: newInvestment.value,
         money: newInvestment.money,
         purchaseDate:
-          newInvestment.purchaseDate || new Date().toISOString().split("T")[0],
-        currentPrice: newInvestment.currentPrice || "N/A",
-        profitLoss: newInvestment.profitLoss || "0%",
+          newInvestment.purchaseDate || new Date().toISOString().split("T")[0]
       };
       setInvestments([...investments, investment]);
       setNewInvestment({});
       setIsDialogOpen(false);
-    }
+    } */
   };
 
   return (
@@ -183,13 +146,20 @@ export default function InvestmentsDashboard({types, wallets} : {types: Types[],
                       <Label htmlFor="type" className="text-right">
                         Tipo
                       </Label>
-                      <Select>
-                        <SelectTrigger className="w-[280px]">
+                      <Select
+                        onValueChange={(value) =>
+                          setNewInvestment({
+                            ...newInvestment,
+                            type: parseInt(value),
+                          })
+                        }
+                      >
+                        <SelectTrigger className="w-[240px]">
                           <SelectValue placeholder="Seleccionar tipo" />
                         </SelectTrigger>
                         <SelectContent>
                           {types.map((t) => (
-                            <SelectItem key={t.id} value={t.name}>
+                            <SelectItem key={t.id} value={(t.id).toString()}>
                               {t.name}
                             </SelectItem>
                           ))}
@@ -200,13 +170,20 @@ export default function InvestmentsDashboard({types, wallets} : {types: Types[],
                       <Label htmlFor="type" className="text-right">
                         Billetera
                       </Label>
-                      <Select>
-                        <SelectTrigger className="w-[280px]">
-                          <SelectValue placeholder="Seleccionar tipo" />
+                      <Select
+                        onValueChange={(value) =>
+                          setNewInvestment({
+                            ...newInvestment,
+                            wallet: parseInt(value),
+                          })
+                        }
+                      >
+                        <SelectTrigger className="w-[240px]">
+                          <SelectValue placeholder="Seleccionar billetera" />
                         </SelectTrigger>
                         <SelectContent>
                           {wallets.map((w) => (
-                            <SelectItem key={w.id} value={w.name}>
+                            <SelectItem key={w.id} value={(w.id).toString()}>
                               {w.name}
                             </SelectItem>
                           ))}
@@ -249,10 +226,17 @@ export default function InvestmentsDashboard({types, wallets} : {types: Types[],
                       <Label htmlFor="money" className="text-right">
                         Moneda
                       </Label>
-    
-                      <Select>
-                        <SelectTrigger className="w-[280px]">
-                          <SelectValue placeholder="Seleccionar tipo" />
+
+                      <Select
+                        onValueChange={(value) =>
+                          setNewInvestment({
+                            ...newInvestment,
+                            money: value,
+                          })
+                        }
+                      >
+                        <SelectTrigger className="w-[240px]">
+                          <SelectValue placeholder="Seleccionar moneda" />
                         </SelectTrigger>
                         <SelectContent>
                           <SelectItem value="ARS">ARS</SelectItem>
@@ -287,7 +271,7 @@ export default function InvestmentsDashboard({types, wallets} : {types: Types[],
               </Dialog>
             </div>
           </div>
-          <CardDescription>
+          <CardDescription className="hidden md:block">
             Una lista detallada de todas tus inversiones actuales.
           </CardDescription>
         </CardHeader>
@@ -302,8 +286,8 @@ export default function InvestmentsDashboard({types, wallets} : {types: Types[],
                   <TableHead>Cantidad</TableHead>
                   <TableHead>Valor</TableHead>
                   <TableHead>Moneda</TableHead>
-                  <TableHead>Fecha de Compra</TableHead>
-                  <TableHead>Precio Actual</TableHead>
+                  <TableHead>Fecha</TableHead>
+                  <TableHead>Precio</TableHead>
                   <TableHead>Ganancia/Pérdida</TableHead>
                 </TableRow>
               </TableHeader>

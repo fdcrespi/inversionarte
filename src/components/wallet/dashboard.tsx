@@ -81,7 +81,7 @@ export function WalletsDashboard({wallets} : {wallets: Wallet[]}) {
               />
             </div>
           </div>
-          <CardDescription>
+          <CardDescription className="hidden md:block">
             Gestiona tus billeteras virtuales y sus saldos.
           </CardDescription>
         </CardHeader>

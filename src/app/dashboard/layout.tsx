@@ -1,6 +1,6 @@
 "use client";
 
-import { LogOut, User } from "lucide-react";
+import { DollarSign, LogOut } from "lucide-react";
 import { Tabs, TabsList } from "@/components/ui/tabs";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import Link from "next/link";
@@ -8,6 +8,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/data";
 import { Button } from "@/components/ui/button";
+import { Usuario } from "@/lib/types";
 
 export default function DashboardLayout({
   children,
@@ -15,7 +16,7 @@ export default function DashboardLayout({
   children: React.ReactNode;
 }>) {
   const pathname = usePathname();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<Usuario>();
   const router = useRouter();
 
   useEffect(() => {
@@ -24,7 +25,11 @@ export default function DashboardLayout({
         data: { user },
       } = await supabase.auth.getUser();
       if (user) {
-        setUser(user);
+        setUser({
+          id: user.id,
+          email: user.email || ""
+        });
+
       } else {
         router.push("/login");
       }
@@ -61,8 +66,13 @@ export default function DashboardLayout({
               <LogOut />
             </Button>
           </div>
-          <h2 className="text-3xl font-bold tracking-tight">Inversionarte</h2>
+          <h2 className="text-3xl font-mono tracking-tight flex items-center justify-center md:justify-start">
+            Inver
+            <DollarSign size={35} />
+            ionarte
+          </h2>
         </div>
+
         <Tabs defaultValue="overview" className="space-y-4">
           <ScrollArea className="w-full whitespace-nowrap rounded-md">
             <TabsList className="inline-flex w-max space-x-2 p-1">
@@ -83,6 +93,7 @@ export default function DashboardLayout({
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
         </Tabs>
+
         {children}
       </div>
     </div>
