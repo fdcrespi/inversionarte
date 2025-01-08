@@ -37,17 +37,7 @@ import {
   SelectValue,
   SelectContent,
 } from "../ui/select";
-
-const types = [
-  { id: 1, name: "Accion" },
-  { id: 2, name: "Bono" },
-  { id: 3, name: "Crypto" },
-  { id: 4, name: "Cedear" },
-  { id: 5, name: "Dolar"},
-  { id: 6, name: "ETF" },
-  { id: 7, name: "FCI" },
-  { id: 8, name: "Plazo Fijo" },
-];
+import { Types, Wallet } from "@/lib/types";
 
 type Investment = {
   id: string;
@@ -119,7 +109,7 @@ const initialInvestments: Investment[] = [
   },
 ];
 
-export default function InvestmentsDashboard() {
+export default function InvestmentsDashboard({types, wallets} : {types: Types[], wallets: Wallet[]}) {
   const [investments, setInvestments] =
     useState<Investment[]>(initialInvestments);
   const [newInvestment, setNewInvestment] = useState<Partial<Investment>>({});
@@ -193,12 +183,6 @@ export default function InvestmentsDashboard() {
                       <Label htmlFor="type" className="text-right">
                         Tipo
                       </Label>
-                      {/*<Input
-                        id="type"
-                        value={newInvestment.type || ""}
-                        onChange={(e) => setNewInvestment({ ...newInvestment, type: e.target.value })}
-                        className="col-span-3"
-                      />*/}
                       <Select>
                         <SelectTrigger className="w-[280px]">
                           <SelectValue placeholder="Seleccionar tipo" />
@@ -207,6 +191,23 @@ export default function InvestmentsDashboard() {
                           {types.map((t) => (
                             <SelectItem key={t.id} value={t.name}>
                               {t.name}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="type" className="text-right">
+                        Billetera
+                      </Label>
+                      <Select>
+                        <SelectTrigger className="w-[280px]">
+                          <SelectValue placeholder="Seleccionar tipo" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          {wallets.map((w) => (
+                            <SelectItem key={w.id} value={w.name}>
+                              {w.name}
                             </SelectItem>
                           ))}
                         </SelectContent>

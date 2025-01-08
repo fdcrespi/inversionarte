@@ -3,3 +3,8 @@ export interface Wallet {
   name: string;
   balance: number
 }
+
+export interface Types {
+  id: number;
+  name: string;
+}
