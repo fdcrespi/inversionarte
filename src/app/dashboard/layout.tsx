@@ -49,7 +49,7 @@ export default function DashboardLayout({
     { name: "Inversiones", href: "/dashboard/investments" },
     { name: "Billeteras", href: "/dashboard/wallets" },
     { name: "Tasas", href: "/dashboard/exchange" },
-    { name: "Monedas", href: "/dashboard/coins" },
+    { name: "Activos", href: "/dashboard/actives" },
   ];
 
   return (

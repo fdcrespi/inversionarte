@@ -20,10 +20,10 @@ export default function InvesmentDashboardSkeleton() {
           <div className="md:flex space-y-2 items-center justify-between">
             <Skeleton className="h-8 w-48" />
             <div className="w-full text-end">
-              <Skeleton className="h-10 w-36 ml-auto" />
+              <Skeleton className="h-10 w-48 ml-auto" />
             </div>
           </div>
-          <Skeleton className="h-4 w-full mt-2" />
+          <Skeleton className="h-4 w-80 mt-2" />
         </CardHeader>
         <CardContent>
           <ScrollArea className="h-[300px]">
