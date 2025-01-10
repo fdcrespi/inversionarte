@@ -8,12 +8,15 @@ import {
   TableHeader,
   TableRow,
 } from "../ui/table";
+import { Button } from "../ui/button";
+import { Trash } from "lucide-react";
 
 export default function ListInvestment({
   investments,
 }: {
   investments: Investment[];
 }) {
+ 
   return (
     <ScrollArea className="h-full min-h-[280px]">
       <Table>
@@ -21,26 +24,26 @@ export default function ListInvestment({
           <TableRow>
             <TableHead>ID</TableHead>
             <TableHead>Activo</TableHead>
-            <TableHead>Tipo</TableHead>
             <TableHead>Cantidad</TableHead>
-            <TableHead>Valor</TableHead>
             <TableHead>Moneda</TableHead>
+            <TableHead>Billetera</TableHead>
             <TableHead>Fecha</TableHead>
-            <TableHead>Precio</TableHead>
-            <TableHead>Ganancia/Pérdida</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {investments.map((investment) => (
             <TableRow key={investment.id}>
               <TableCell>{investment.id}</TableCell>
-              <TableCell>{investment.type}</TableCell>
-              <TableCell>{investment.amount}</TableCell>
-              <TableCell>{investment.value}</TableCell>
+              <TableCell>{investment.active.name}</TableCell>
+              <TableCell>{investment.cantidad}</TableCell>
               <TableCell>{investment.money}</TableCell>
-              <TableCell>{investment.purchaseDate}</TableCell>
-              <TableCell>{investment.currentPrice}</TableCell>
-              <TableCell>{investment.profitLoss}</TableCell>
+              <TableCell>{investment.wallet.name}</TableCell>
+              <TableCell>{new Date(investment.created_at).toLocaleDateString('es-AR')}</TableCell>
+              <TableCell>
+                <Button size="icon" variant="destructive">
+                  <Trash />
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

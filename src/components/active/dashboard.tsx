@@ -37,6 +37,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { supabase } from "@/lib/data";
+import { useToast } from "@/hooks/use-toast";
 
 export function ActivesDashboard({
   actives,
@@ -51,24 +53,57 @@ export function ActivesDashboard({
     valor: 0
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const { toast } = useToast();
 
-  const handleAddWallet = () => {
-    console.log(newActive);
-    /* if (newWallet.name && newWallet.balance) {
-      setWallets([
-        ...wallets,
-        {
-          id: (wallets.length + 1).toString(),
-          name: newWallet.name,
-          balance: parseFloat(newWallet.balance),
-        },
-      ]);
-      setNewWallet({ name: "", balance: "" });
-      setIsDialogOpen(false);
-    } */
+/*   useEffect(() => {
+    // Suscribirse a los cambios en la tabla "active"
+    const subscription = supabase
+      .channel("realtime-actives")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "active" },
+        (payload) => {
+          console.log("Cambio detectado:", payload);
+
+          if (payload.eventType === "INSERT") {
+            // Agregar el nuevo registro a la lista
+            setActives((prev) => [...prev, payload.new as Actives]);
+          } else if (payload.eventType === "UPDATE") {
+            // Actualizar el registro existente
+            setActives((prev) =>
+              prev.map((item) =>
+                item.id === payload.new.id ? (payload.new as Actives) : item
+              )
+            );
+          } else if (payload.eventType === "DELETE") {
+            // Eliminar el registro de la lista
+            setActives((prev) =>
+              prev.filter((item) => item.id !== payload.old.id)
+            );
+          }
+        }
+      )
+      .subscribe();
+
+    // Cleanup: desuscribirse al desmontar el componente
+    return () => {
+      supabase.removeChannel(subscription);
+    };
+  }, []); */
+
+  const handleAddWallet = async () => {
+    const { error } = await supabase
+      .from('active')
+      .insert({ name: newActive.name, type_id: newActive.tipo, value_usd: newActive.valor})
+    if (error) {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Error al insertar activo",
+      })
+    }
+    setIsDialogOpen(false);
   };
-
-  console.log(actives);
 
   return (
     <div className="space-y-4">

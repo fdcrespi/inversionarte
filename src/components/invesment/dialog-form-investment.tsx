@@ -7,6 +7,7 @@ import { Plus } from "lucide-react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { useToast } from "@/hooks/use-toast";
 
 export default function DialogFormInvestment(
   {
@@ -21,6 +22,7 @@ export default function DialogFormInvestment(
   const [newInvestment, setNewInvestment] = useState<Partial<Investment>>({});
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [user, setUser] = useState<string>('');
+  const { toast } = useToast();
 
   useEffect(() => {
     const getUser = async () => {
@@ -34,30 +36,41 @@ export default function DialogFormInvestment(
     getUser();
   }, []);
 
-  const handleAddInvestment = () => {
-    console.log(newInvestment);
-    console.log(user);
-    /* if (
-      newInvestment.asset &&
-      newInvestment.type &&
-      newInvestment.amount &&
-      newInvestment.value &&
+  const handleAddInvestment = async () => {
+    if (
+      newInvestment.active?.id &&
+      newInvestment.cantidad &&
       newInvestment.money &&
-      newInvestment.wallet
+      newInvestment.wallet?.id
     ) {
-      const investment: Investment = {
-        asset: newInvestment.asset,
-        type: newInvestment.type,
-        amount: newInvestment.amount,
-        value: newInvestment.value,
-        money: newInvestment.money,
-        purchaseDate:
-          newInvestment.purchaseDate || new Date().toISOString().split("T")[0]
-      };
-      setInvestments([...investments, investment]);
+      const { error } = await supabase
+        .from('invesment')
+        .insert({ 
+          created_at: newInvestment.created_at,
+          cantidad: newInvestment.cantidad, 
+          user_id: user,
+          wallet_id: newInvestment.wallet.id,
+          active_id: newInvestment.active.id,
+          money: newInvestment.money
+        })
+        if (error) {
+          console.log(error)
+          toast({
+            variant: "destructive",
+            title: "Error",
+            description: "Error al insertar activo",
+          })
+        }
       setNewInvestment({});
       setIsDialogOpen(false);
-    } */
+    }
+    else {
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Debe completar todos los campos",
+      })
+    }
   };
 
   return (
@@ -82,20 +95,26 @@ export default function DialogFormInvestment(
               Activo
             </Label>
             <Select
-              onValueChange={(value) =>
-                setNewInvestment({
-                  ...newInvestment,
-                  activo: parseInt(value),
-                })
-              }
+              onValueChange={(value) => {
+                const selectedActive = wallets.find((w) => w.id === parseInt(value));
+                if (selectedActive) {
+                  setNewInvestment({
+                    ...newInvestment,
+                    active: {
+                      id: parseInt(value),
+                      name: selectedActive.name,
+                    },
+                  });
+                }
+              }}
             >
               <SelectTrigger className="w-[240px]">
                 <SelectValue placeholder="Seleccionar activo" />
               </SelectTrigger>
               <SelectContent>
                 {actives.map((a) => (
-                  <SelectItem key={a.id} value={a.id.toString()}>
-                    {a.name} <span className="font-light text-xs">({a.types.name})</span>
+                  <SelectItem key={a.id} value={a.id}>
+                    {a.name} <span className="font-light text-xs">({a.name})</span>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -106,12 +125,18 @@ export default function DialogFormInvestment(
               Billetera
             </Label>
             <Select
-              onValueChange={(value) =>
-                setNewInvestment({
-                  ...newInvestment,
-                  wallet: parseInt(value),
-                })
-              }
+              onValueChange={(value) => {
+                const selectedWallet = wallets.find((w) => w.id === parseInt(value));
+                if (selectedWallet) {
+                  setNewInvestment({
+                    ...newInvestment,
+                    wallet: {
+                      id: parseInt(value),
+                      name: selectedWallet.name,
+                    },
+                  });
+                }
+              }}
             >
               <SelectTrigger className="w-[240px]">
                 <SelectValue placeholder="Seleccionar billetera" />
@@ -126,16 +151,15 @@ export default function DialogFormInvestment(
             </Select>
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="amount" className="text-right">
+            <Label htmlFor="cantidad" className="text-right">
               Cantidad
             </Label>
             <Input
-              id="amount"
-              value={newInvestment.amount || ""}
+              id="cantidad"
               onChange={(e) =>
                 setNewInvestment({
                   ...newInvestment,
-                  amount: e.target.value,
+                  cantidad: parseFloat(e.target.value),
                 })
               }
               className="col-span-3"
@@ -147,11 +171,10 @@ export default function DialogFormInvestment(
             </Label>
             <Input
               id="value"
-              value={newInvestment.value || ""}
               onChange={(e) =>
                 setNewInvestment({
                   ...newInvestment,
-                  value: e.target.value,
+                  value: parseFloat(e.target.value),
                 })
               }
               className="col-span-3"
@@ -161,7 +184,6 @@ export default function DialogFormInvestment(
             <Label htmlFor="money" className="text-right">
               Moneda
             </Label>
-
             <Select
               onValueChange={(value) =>
                 setNewInvestment({
@@ -186,11 +208,10 @@ export default function DialogFormInvestment(
             <Input
               id="purchaseDate"
               type="date"
-              value={newInvestment.purchaseDate || ""}
               onChange={(e) =>
                 setNewInvestment({
                   ...newInvestment,
-                  purchaseDate: e.target.value,
+                  created_at: e.target.value,
                 })
               }
               className="col-span-3"

@@ -16,15 +16,18 @@ export interface Usuario {
 
 export interface Investment {
   id: string;
-  activo: number;
-  type: number;
-  amount: string;
-  value: string;
+  created_at: string;
+  cantidad: number;
+  wallet: {
+    id: number;
+    name: string
+  };
+  active: {
+    id: number;
+    name: string
+  };
   money: string;
-  wallet: number;
-  purchaseDate: string;
-  currentPrice: string;
-  profitLoss: string;
+  value: number
 };
 
 export interface Actives {

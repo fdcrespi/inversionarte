@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 import {
   Card,
   CardContent,
@@ -19,12 +17,13 @@ import DialogFormInvestment from "./dialog-form-investment";
 export default function InvestmentsDashboard({
   actives,
   wallets,
+  investments
 }: {
   actives: Actives[];
   wallets: Wallet[];
+  investments: Investment[]
 }) {
-  const [investments] = useState<Investment[]>([]);
-  
+
   return (
     <div className="space-y-4">
       <Card>
