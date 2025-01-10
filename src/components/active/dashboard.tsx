@@ -130,7 +130,7 @@ export function ActivesDashboard({
                 {actives.map((a) => (
                   <TableRow key={a.id}>
                     <TableCell className="font-medium">{a.name}</TableCell>
-                    <TableCell className="font-medium">{a.types.name}</TableCell>
+                    <TableCell className="font-medium">{a.type.name}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

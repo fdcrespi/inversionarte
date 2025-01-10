@@ -11,7 +11,7 @@ export default async function ActivesPage() {
       `
        id,
        name,
-       types:types!active_type_id_fkey(id, name),
+       type:types!active_type_id_fkey(id, name),
        value_usd
       `
     )
