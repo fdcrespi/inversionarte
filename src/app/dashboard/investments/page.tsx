@@ -31,7 +31,8 @@ export default async function InvestmentsPage() {
         cantidad,
         wallet: wallet!invesment_wallet_id_fkey(id, name),
         active: active!invesment_coin_id_fkey(id, name),
-        money
+        money,
+        value
       `
     )
     .then((res) => res.data as unknown as Investment[])

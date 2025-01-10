@@ -25,6 +25,7 @@ export interface Investment {
   active: {
     id: number;
     name: string
+    value_usd?: number;
   };
   money: string;
   value: number
@@ -33,7 +34,7 @@ export interface Investment {
 export interface Actives {
   id: string;
   name: string;
-  types: {
+  type: {
     id: string,
     name: string
   };

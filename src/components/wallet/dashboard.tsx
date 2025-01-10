@@ -33,9 +33,9 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { Wallet } from "@/lib/types";
 
 // Tasa de cambio de ejemplo (1 USD = 100 ARS)
-const exchangeRate = 100;
+/* const exchangeRate = 100; */
 
-export function WalletsDashboard({wallets} : {wallets: Wallet[]}) {
+export function WalletsDashboard({wallets , exchangeRate} : {wallets: Wallet[], exchangeRate: number}) {
  
   const [showPesos, setShowPesos] = useState(false);
   const [newWallet, setNewWallet] = useState({
@@ -100,7 +100,7 @@ export function WalletsDashboard({wallets} : {wallets: Wallet[]}) {
                     <TableCell className="font-medium">{wallet.name}</TableCell>
                     <TableCell className="text-right">
                       {showPesos
-                        ? `ARS ${(wallet.balance ? wallet.balance * exchangeRate : 0).toLocaleString('es-ar', {style: 'currency', currency: 'ARS', minimumFractionDigits: 2})}`
+                        ? `ARS ${(wallet.balance ? wallet.balance / exchangeRate : 0).toLocaleString('es-ar', {style: 'currency', currency: 'ARS', minimumFractionDigits: 2})}`
                         : `USD ${(wallet.balance ? wallet.balance : 0).toLocaleString('es-ar', {style: 'currency', currency: 'ARS', minimumFractionDigits: 2})}`}
                     </TableCell>
                   </TableRow>
@@ -112,7 +112,7 @@ export function WalletsDashboard({wallets} : {wallets: Wallet[]}) {
             <div className="text-2xl font-bold">
               Total:{" "}
               {showPesos
-                ? `ARS ${(totalBalance ? totalBalance * exchangeRate : 0).toLocaleString('es-ar', {style: 'currency', currency: 'ARS', minimumFractionDigits: 2})}`
+                ? `ARS ${(totalBalance ? totalBalance / exchangeRate : 0).toLocaleString('es-ar', {style: 'currency', currency: 'ARS', minimumFractionDigits: 2})}`
                 : `USD ${(totalBalance ? totalBalance : 0).toLocaleString('es-ar', {style: 'currency', currency: 'ARS', minimumFractionDigits: 2})}`}
             </div>
             <div className="w-full text-end">

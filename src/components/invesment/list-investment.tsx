@@ -25,6 +25,7 @@ export default function ListInvestment({
             <TableHead>ID</TableHead>
             <TableHead>Activo</TableHead>
             <TableHead>Cantidad</TableHead>
+            <TableHead>Valor</TableHead>
             <TableHead>Moneda</TableHead>
             <TableHead>Billetera</TableHead>
             <TableHead>Fecha</TableHead>
@@ -32,10 +33,11 @@ export default function ListInvestment({
         </TableHeader>
         <TableBody>
           {investments.map((investment) => (
-            <TableRow key={investment.id}>
+            <TableRow key={investment.id} className={`${investment.cantidad < 0 ? 'bg-red-100' : ''}`}>
               <TableCell>{investment.id}</TableCell>
               <TableCell>{investment.active.name}</TableCell>
-              <TableCell>{investment.cantidad}</TableCell>
+              <TableCell>{(investment.cantidad).toLocaleString('es-AR', { maximumFractionDigits: 4, minimumFractionDigits: 2})}</TableCell>
+              <TableCell>{(investment.value).toLocaleString('es-AR', { maximumFractionDigits: 4, minimumFractionDigits: 2})}</TableCell>
               <TableCell>{investment.money}</TableCell>
               <TableCell>{investment.wallet.name}</TableCell>
               <TableCell>{new Date(investment.created_at).toLocaleDateString('es-AR')}</TableCell>
