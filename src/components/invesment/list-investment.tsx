@@ -1,5 +1,5 @@
 import { Investment } from "@/lib/types";
-import { ScrollArea } from "../ui/scroll-area";
+import { ScrollArea, ScrollBar } from "../ui/scroll-area";
 import {
   Table,
   TableBody,
@@ -18,7 +18,7 @@ export default function ListInvestment({
 }) {
  
   return (
-    <ScrollArea className="h-full min-h-[280px]">
+    <ScrollArea className="absolute md:h-full md:w-full">
       <Table>
         <TableHeader>
           <TableRow>
@@ -50,6 +50,7 @@ export default function ListInvestment({
           ))}
         </TableBody>
       </Table>
+      <ScrollBar orientation="horizontal" />
     </ScrollArea>
   );
 }

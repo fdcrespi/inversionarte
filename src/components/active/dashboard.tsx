@@ -123,7 +123,7 @@ export function ActivesDashboard({
                 <TableRow>
                   <TableHead>Nombre</TableHead>
                   <TableHead>Tipo</TableHead>
-                  <TableHead className="text-right">Saldo</TableHead>
+                {/*   <TableHead className="text-right">Saldo</TableHead> */}
                 </TableRow>
               </TableHeader>
               <TableBody>

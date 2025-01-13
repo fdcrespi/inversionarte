@@ -38,7 +38,7 @@ export default function InvestmentsDashboard({
             Una lista detallada de todas tus inversiones actuales.
           </CardDescription>
         </CardHeader>
-        <CardContent>
+        <CardContent className="relative">
           <ListInvestment investments={investments}/>
         </CardContent>
       </Card>
