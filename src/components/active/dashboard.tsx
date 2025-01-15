@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -54,8 +54,9 @@ export function ActivesDashboard({
   });
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { toast } = useToast();
+  const [activos, setActivos] = useState<Actives[]>(actives)
 
-/*   useEffect(() => {
+  useEffect(() => {
     // Suscribirse a los cambios en la tabla "active"
     const subscription = supabase
       .channel("realtime-actives")
@@ -67,29 +68,27 @@ export function ActivesDashboard({
 
           if (payload.eventType === "INSERT") {
             // Agregar el nuevo registro a la lista
-            setActives((prev) => [...prev, payload.new as Actives]);
+            setActivos((prev) => [...prev, payload.new as Actives]);
           } else if (payload.eventType === "UPDATE") {
             // Actualizar el registro existente
-            setActives((prev) =>
+            setActivos((prev) =>
               prev.map((item) =>
                 item.id === payload.new.id ? (payload.new as Actives) : item
               )
             );
           } else if (payload.eventType === "DELETE") {
             // Eliminar el registro de la lista
-            setActives((prev) =>
+            setActivos((prev) =>
               prev.filter((item) => item.id !== payload.old.id)
             );
           }
         }
       )
       .subscribe();
-
-    // Cleanup: desuscribirse al desmontar el componente
     return () => {
       supabase.removeChannel(subscription);
     };
-  }, []); */
+  }, []);
 
   const handleAddWallet = async () => {
     const { error } = await supabase
@@ -127,7 +126,7 @@ export function ActivesDashboard({
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {actives.map((a) => (
+                {activos.map((a) => (
                   <TableRow key={a.id}>
                     <TableCell className="font-medium">{a.name}</TableCell>
                     <TableCell className="font-medium">{a.type.name}</TableCell>

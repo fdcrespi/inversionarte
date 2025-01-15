@@ -12,6 +12,8 @@ import { Actives, Investment, Wallet } from "@/lib/types";
 
 import ListInvestment from "./list-investment";
 import DialogFormInvestment from "./dialog-form-investment";
+import { useEffect, useState } from "react";
+import { supabase } from "@/lib/data";
 
 
 export default function InvestmentsDashboard({
@@ -23,6 +25,40 @@ export default function InvestmentsDashboard({
   wallets: Wallet[];
   investments: Investment[]
 }) {
+
+  const [inversiones, setInversiones] = useState<Investment[]>(investments);
+
+  useEffect(() => {
+    // Suscribirse a los cambios en la tabla "active"
+    const subscription = supabase
+      .channel("realtime-investments")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "invesment" },
+        (payload) => {
+          if (payload.eventType === "INSERT") {
+            // Agregar el nuevo registro a la lista
+            setInversiones((prev) => [...prev, payload.new as Investment]);
+          } else if (payload.eventType === "UPDATE") {
+            // Actualizar el registro existente
+            setInversiones((prev) =>
+              prev.map((item) =>
+                item.id === payload.new.id ? (payload.new as Investment) : item
+              )
+            );
+          } else if (payload.eventType === "DELETE") {
+            // Eliminar el registro de la lista
+            setInversiones((prev) =>
+              prev.filter((item) => item.id !== payload.old.id)
+            );
+          }
+        }
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(subscription);
+    };
+  }, []);
 
   return (
     <div className="space-y-4">
@@ -39,7 +75,7 @@ export default function InvestmentsDashboard({
           </CardDescription>
         </CardHeader>
         <CardContent className="relative">
-          <ListInvestment investments={investments}/>
+          <ListInvestment investments={inversiones}/>
         </CardContent>
       </Card>
     </div>
