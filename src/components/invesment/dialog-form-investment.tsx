@@ -37,7 +37,7 @@ export default function DialogFormInvestment(
   }, []);
 
   const handleAddInvestment = async () => {
-    console.log(newInvestment)
+
     if (
       newInvestment.active?.id &&
       newInvestment.cantidad &&

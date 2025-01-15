@@ -51,7 +51,6 @@ export function WalletsDashboard({wallets , exchangeRate} : {wallets: Wallet[], 
   };
 
   const handleAddWallet = () => {
-    console.log("hi");
     /* if (newWallet.name && newWallet.balance) {
       setWallets([
         ...wallets,
