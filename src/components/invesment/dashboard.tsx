@@ -38,7 +38,23 @@ export default function InvestmentsDashboard({
         (payload) => {
           if (payload.eventType === "INSERT") {
             // Agregar el nuevo registro a la lista
-            setInversiones((prev) => [...prev, payload.new as Investment]);
+            const inv = {
+              id: payload.new.id,
+              created_at: payload.new.created_at,
+              cantidad: payload.new.cantidad,
+              wallet: {
+                id: payload.new.wallet_id,
+                name: wallets.find(w => w.id == payload.new.wallet_id)!.name
+              },
+              active: {
+                id: payload.new.active_id,
+                name: actives.find(a => a.id == payload.new.active_id)!.name,
+                value_usd: actives.find(a => a.id == payload.new.active_id)!.value_usd 
+              },
+              money: payload.new.money,
+              value: payload.new.value
+            }
+            setInversiones((prev) => [...prev, inv as Investment]);
           } else if (payload.eventType === "UPDATE") {
             // Actualizar el registro existente
             setInversiones((prev) =>
