@@ -74,7 +74,7 @@ export default function InvestmentsDashboard({
     return () => {
       supabase.removeChannel(subscription);
     };
-  }, []);
+  }, [actives, wallets]);
 
   return (
     <div className="space-y-4">
