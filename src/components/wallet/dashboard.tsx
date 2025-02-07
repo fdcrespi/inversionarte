@@ -36,7 +36,6 @@ import { Wallet } from "@/lib/types";
 /* const exchangeRate = 100; */
 
 export function WalletsDashboard({wallets , exchangeRate} : {wallets: Wallet[], exchangeRate: number}) {
- 
   const [showPesos, setShowPesos] = useState(false);
   const [newWallet, setNewWallet] = useState({
     name: "",
