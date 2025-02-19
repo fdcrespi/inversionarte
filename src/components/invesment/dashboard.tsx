@@ -15,17 +15,15 @@ import DialogFormInvestment from "./dialog-form-investment";
 import { useEffect, useState } from "react";
 import { supabase } from "@/lib/data";
 
-
 export default function InvestmentsDashboard({
   actives,
   wallets,
-  investments
+  investments,
 }: {
   actives: Actives[];
   wallets: Wallet[];
-  investments: Investment[]
+  investments: Investment[];
 }) {
-
   const [inversiones, setInversiones] = useState<Investment[]>(investments);
 
   useEffect(() => {
@@ -42,18 +40,20 @@ export default function InvestmentsDashboard({
               id: payload.new.id,
               created_at: payload.new.created_at,
               cantidad: payload.new.cantidad,
-              wallet: {
-                id: payload.new.wallet_id,
-                name: wallets.find(w => w.id == payload.new.wallet_id)!.name
-              },
-              active: {
-                id: payload.new.active_id,
-                name: actives.find(a => a.id == payload.new.active_id)!.name,
-                value_usd: actives.find(a => a.id == payload.new.active_id)!.value_usd 
-              },
+
+              wallet_id: payload.new.wallet_id,
+              wallet_name: wallets.find((w) => w.id == payload.new.wallet_id)!
+                .name,
+
+              active_id: payload.new.active_id,
+              active_name: actives.find((a) => a.id == payload.new.active_id)!
+                .name,
+              active_value: actives.find((a) => a.id == payload.new.active_id)!
+                .value_usd,
+
               money: payload.new.money,
-              value: payload.new.value
-            }
+              value: payload.new.value,
+            };
             setInversiones((prev) => [...prev, inv as Investment]);
           } else if (payload.eventType === "UPDATE") {
             // Actualizar el registro existente
@@ -91,7 +91,7 @@ export default function InvestmentsDashboard({
           </CardDescription>
         </CardHeader>
         <CardContent className="relative">
-          <ListInvestment investments={inversiones}/>
+          <ListInvestment investments={inversiones} />
         </CardContent>
       </Card>
     </div>

@@ -94,6 +94,7 @@ export function WalletsDashboard({wallets , exchangeRate} : {wallets: Wallet[], 
               </TableHeader>
               <TableBody>
                 {wallets.map((wallet) => (
+                  wallet.balance > 0 &&
                   <TableRow key={wallet.id}>
                     <TableCell className="font-medium">{wallet.name}</TableCell>
                     <TableCell className="text-right">

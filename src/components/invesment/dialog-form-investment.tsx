@@ -1,27 +1,38 @@
 import { supabase } from "@/lib/data";
 import { Actives, Investment, Wallet } from "@/lib/types";
 import { useEffect, useState } from "react";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from "../ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "../ui/dialog";
 import { Button } from "../ui/button";
 import { Plus } from "lucide-react";
 import { Label } from "../ui/label";
 import { Input } from "../ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import { useToast } from "@/hooks/use-toast";
 
-export default function DialogFormInvestment(
-  {
-    actives,
-    wallets,
-  }: {
-    actives: Actives[];
-    wallets: Wallet[];
-  }
-) {
-
+export default function DialogFormInvestment({
+  actives,
+  wallets,
+}: {
+  actives: Actives[];
+  wallets: Wallet[];
+}) {
   const [newInvestment, setNewInvestment] = useState<Partial<Investment>>({});
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [user, setUser] = useState<string>('');
+  const [user, setUser] = useState<string>("");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -37,41 +48,37 @@ export default function DialogFormInvestment(
   }, []);
 
   const handleAddInvestment = async () => {
-
     if (
-      newInvestment.active?.id &&
+      newInvestment.active_id &&
       newInvestment.cantidad &&
       newInvestment.money &&
-      newInvestment.wallet?.id
+      newInvestment.wallet_id
     ) {
-      const { error } = await supabase
-        .from('invesment')
-        .insert({ 
-          created_at: newInvestment.created_at,
-          cantidad: newInvestment.cantidad, 
-          user_id: user,
-          wallet_id: newInvestment.wallet.id,
-          active_id: newInvestment.active.id,
-          money: newInvestment.money,
-          value: newInvestment.value
-        })
-        if (error) {
-          console.log(error)
-          toast({
-            variant: "destructive",
-            title: "Error",
-            description: "Error al insertar activo",
-          })
-        }
+      const { error } = await supabase.from("invesment").insert({
+        created_at: newInvestment.created_at,
+        cantidad: newInvestment.cantidad,
+        user_id: user,
+        wallet_id: newInvestment.wallet_id,
+        active_id: newInvestment.active_id,
+        money: newInvestment.money,
+        value: newInvestment.value,
+      });
+      if (error) {
+        console.log(error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Error al insertar activo",
+        });
+      }
       setNewInvestment({});
       setIsDialogOpen(false);
-    }
-    else {
+    } else {
       toast({
         variant: "destructive",
         title: "Error",
         description: "Debe completar todos los campos",
-      })
+      });
     }
   };
 
@@ -91,7 +98,6 @@ export default function DialogFormInvestment(
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
-  
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="type" className="text-right">
               Activo
@@ -102,10 +108,8 @@ export default function DialogFormInvestment(
                 if (selectedActive) {
                   setNewInvestment({
                     ...newInvestment,
-                    active: {
-                      id: parseInt(value),
-                      name: selectedActive.name,
-                    },
+                    active_id: parseInt(value),
+                    active_name: selectedActive.name,
                   });
                 }
               }}
@@ -116,7 +120,8 @@ export default function DialogFormInvestment(
               <SelectContent>
                 {actives.map((a) => (
                   <SelectItem key={a.id} value={a.id}>
-                    {a.name} <span className="font-light text-xs">({a.type.name})</span>
+                    {a.name}{" "}
+                    <span className="font-light text-xs">({a.type_name})</span>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -128,14 +133,14 @@ export default function DialogFormInvestment(
             </Label>
             <Select
               onValueChange={(value) => {
-                const selectedWallet = wallets.find((w) => w.id === parseInt(value));
+                const selectedWallet = wallets.find(
+                  (w) => w.id === parseInt(value)
+                );
                 if (selectedWallet) {
                   setNewInvestment({
                     ...newInvestment,
-                    wallet: {
-                      id: parseInt(value),
-                      name: selectedWallet.name,
-                    },
+                    wallet_id: parseInt(value),
+                    wallet_name: selectedWallet.name,
                   });
                 }
               }}

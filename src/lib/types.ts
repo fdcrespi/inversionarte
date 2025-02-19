@@ -18,15 +18,11 @@ export interface Investment {
   id: string;
   created_at: string;
   cantidad: number;
-  wallet: {
-    id: number;
-    name: string
-  };
-  active: {
-    id: number;
-    name: string
-    value_usd?: number;
-  };
+  wallet_id: number;
+  wallet_name: string;
+  active_id: number;
+  active_name: string;
+  active_value?: number;
   money: string;
   value: number
 };
@@ -34,9 +30,6 @@ export interface Investment {
 export interface Actives {
   id: string;
   name: string;
-  type: {
-    id: string,
-    name: string
-  };
+  type_name: string;
   value_usd: number;
 }
