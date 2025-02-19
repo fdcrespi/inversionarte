@@ -97,7 +97,7 @@ export default function ExchangeDashboard({ actives }: { actives: Actives[] }) {
               {actives.map((a) => (
                 <TableRow key={a.id}>
                   <TableCell className="font-medium">{a.name}</TableCell>
-                  <TableCell className="font-medium">{a.type.name}</TableCell>
+                  <TableCell className="font-medium">{a.type_name}</TableCell>
                   <TableCell className="flex space-x-1">
                     <Input
                       type="number"
