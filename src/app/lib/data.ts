@@ -25,7 +25,7 @@ export async function fetchActives(name?: string) {
   try {
     let data;
     (name) ? data = await pool.query("SELECT a.*, t.name as type_name FROM active a JOIN types t ON a.type_id = t.id WHERE a.name = $1", [name])
-    : data = await pool.query(`SELECT * FROM active`);
+    : data = await pool.query(`SELECT a.*, t.name as type_name FROM active a JOIN types t ON a.type_id = t.id`);
     return data.rows;
   } catch (error) {
     console.error('Database Error:', error);
