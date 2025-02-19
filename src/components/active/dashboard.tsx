@@ -71,10 +71,8 @@ export function ActivesDashboard({
             const act = {
               id: payload.new.id,
               name: payload.new.name,
-              type:  {
-                id: payload.new.type_id,
-                name: types.find(t => t.id == payload.new.type_id)!.name
-              },
+              type_id: payload.new.type_id,
+              type_name: types.find(t => t.id == payload.new.type_id)!.name,
               value_usd: payload.new.value_usd
             };
             setActivos((prev) => [...prev, act as Actives]);
@@ -139,7 +137,7 @@ export function ActivesDashboard({
                   {activos.map((a) => (
                     <TableRow key={a.id}>
                       <TableCell className="font-medium">{a.name}</TableCell>
-                      <TableCell className="font-medium">{a.type.name}</TableCell>
+                      <TableCell className="font-medium">{a.type_name}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>

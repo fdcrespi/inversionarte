@@ -30,6 +30,7 @@ export interface Investment {
 export interface Actives {
   id: string;
   name: string;
+  type_id: number;
   type_name: string;
   value_usd: number;
 }
