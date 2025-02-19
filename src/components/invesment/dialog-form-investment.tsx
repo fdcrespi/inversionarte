@@ -48,6 +48,7 @@ export default function DialogFormInvestment({
   }, []);
 
   const handleAddInvestment = async () => {
+    console.log(newInvestment)
     if (
       newInvestment.active_id &&
       newInvestment.cantidad &&
@@ -133,8 +134,9 @@ export default function DialogFormInvestment({
             </Label>
             <Select
               onValueChange={(value) => {
+                console.log(wallets);
                 const selectedWallet = wallets.find(
-                  (w) => w.id === parseInt(value)
+                  (w) => w.id == parseInt(value)
                 );
                 if (selectedWallet) {
                   setNewInvestment({
